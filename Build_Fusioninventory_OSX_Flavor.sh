@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Pour préparer un agent plus récent, remplacer la variable FI_VERSION avec une nouvelle version
-FI_VERSION="2.3.10.1"
+FI_VERSION="2.3.13"
 FI_DIR="fusioninventory-agent-$FI_VERSION"
 # Perlbrew settings
 PERLBREWROOTDST=$HOME/perl5
-OSXPERLVER="5.16.2"
+OSXPERLVER="5.18.2"
 
 # Chemin d'installation pour la version OSX
 INSTALL_PATH='/usr/local/fusioninventory'
@@ -44,17 +44,17 @@ fi
 $PERLBREWROOTDST/perlbrew/bin/cpanm --local-lib=$PERLBREWROOTDST local::lib && eval $(perl -I $PERLBREWROOTDST/lib/perl5/ -Mlocal::lib)
 
 # Installe les modules manquants
-echo "install or update required Perl modules"
-cpanm -i Module::Install ExtUtils::MakeMaker HTTP::Proxy HTTP::Server::Simple HTTP::Server::Simple::Authen IO::Capture::Stderr IO::Socket::SSL IPC::Run JSON LWP::Protocol::https Net::SNMP POE::Component::Client::Ping Test::Compile Test::Deep Test::Exception Test::HTTP::Server::Simple Test::MockModule Test::MockObject Test::More Test::NoWarnings File::Remove File::Which LWP Net::IP Socket::GetAddrInfo Text::Template UNIVERSAL::require XML::TreePP
+echo "install or update required modules"
+cpanm -i Module::Install ExtUtils::MakeMaker HTTP::Proxy HTTP::Server::Simple HTTP::Server::Simple::Authen IO::Capture::Stderr IO::Socket::SSL IPC::Run JSON LWP::Protocol::https Net::SNMP POE::Component::Client::Ping Test::Compile Test::Deep Test::Exception Test::HTTP::Server::Simple Test::MockModule Test::MockObject Test::More Test::NoWarnings File::Remove File::Which LWP Net::IP Socket::GetAddrInfo Text::Template UNIVERSAL::require XML::TreePP Proc::Daemon Proc::PID::File Proc::ProcessTable
 
 if [ ! -f $FI_VERSION.tar.gz ]; then
-   curl -O -L https://github.com/fusinv/fusioninventory-agent/archive/$FI_VERSION.tar.gz && echo "Téléchargement de l'archive"
+   curl -O -L http://forge.fusioninventory.org/attachments/download/1690/FusionInventory-Agent-$FI_VERSION.tar.gz && echo "Téléchargement de l'archive"
 fi
 
 echo "Vide le dossier des sources"
 rm -Rf $SRCDST
 echo "Décompresse l'archive"
-tar xzf $FI_VERSION.tar.gz
+tar xzf Fusioninventory-Agent-$FI_VERSION.tar.gz
 [ -d "$SRCDST" ] || mkdir "$SRCDST"
 cd $FI_DIR
 
@@ -79,4 +79,3 @@ echo "######################################"
 echo "Change backend timeout from 30 to 180"
 sed -i "" "s/backend-collect-timeout = 30/backend-collect-timeout = 180/g" $SRCDST$CONFDIR_PATH/agent.cfg.default
 echo "######################################"
-
