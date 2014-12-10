@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<installer-script authoringTool="Packages" authoringToolVersion="1.1.1" authoringToolBuild="2B71" minSpecVersion="1.0">
+<installer-script authoringTool="Packages" authoringToolVersion="1.1.2" authoringToolBuild="2B104" minSpecVersion="1.0">
     <options customize="always"/>
     <installation-check script="installation_check()"/>
     <!--+==========================+
@@ -25,7 +25,7 @@
         |    Package References    |
         +==========================+-->
     <pkg-ref id="org.fusioninventory.startup" version="1.0" auth="Root" installKBytes="0" onConclusion="RequireRestart">file:./Contents/Packages/FusionInventory%20Daemon.pkg</pkg-ref>
-    <pkg-ref id="org.fusioninventory.agent" version="2.3.10.1" auth="Root" installKBytes="9268">file:./Contents/Packages/FusionInventory%20Agent.pkg</pkg-ref>
+    <pkg-ref id="org.fusioninventory.agent" version="2.3.13" auth="Root" installKBytes="8999">file:./Contents/Packages/FusionInventory%20Agent.pkg</pkg-ref>
     <!--+==========================+
         |    JavaScript Scripts    |
         +==========================+-->
@@ -74,13 +74,27 @@
 		{
 			var tIsServer;
 			
-			if (inDiskType==IC_DISK_TYPE_DESTINATION)
+			if (system.compareVersions(tOSVersion,'10.8.0')==-1)
 			{
-				tIsServer=system.files.fileExistsAtPath(my.target.mountpoint+'/System/Library/CoreServices/ServerVersion.plist');
+				if (inDiskType==IC_DISK_TYPE_DESTINATION)
+				{
+					tIsServer=system.files.fileExistsAtPath(my.target.mountpoint+'/System/Library/CoreServices/ServerVersion.plist');
+				}
+				else
+				{
+					tIsServer=system.files.fileExistsAtPath('/System/Library/CoreServices/ServerVersion.plist');
+				}
 			}
 			else
 			{
-				tIsServer=system.files.fileExistsAtPath('/System/Library/CoreServices/ServerVersion.plist');
+				if (inDiskType==IC_DISK_TYPE_DESTINATION)
+				{
+					tIsServer=system.files.fileExistsAtPath(my.target.mountpoint+'/Applications/Server.app');
+				}
+				else
+				{
+					tIsServer=system.files.fileExistsAtPath('/Applications/Server.app');
+				}
 			}
 			
 			if (inDistributionType==IC_OS_DISTRIBUTION_TYPE_CLIENT &amp;&amp; tIsServer==true)
